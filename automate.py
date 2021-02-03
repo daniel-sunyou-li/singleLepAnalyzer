@@ -71,11 +71,11 @@ for x in hpo_lower:
 step=1
 
 if step==1:
-os.chdir('makeTemplates')
-for train in trainings:
-  for v in train['variable']:
-    os.system('python doCondorTemplates.py '+train['year']+' '+v+' '+train['postfix']+' '+train['path'])
-  os.chdir('..')
+  os.chdir('makeTemplates')
+  for train in trainings:
+    for v in train['variable']:
+      os.system('python doCondorTemplates.py '+train['year']+' '+v+' '+train['postfix']+' '+train['path'])
+    os.chdir('..')
 
 if step==2:
   os.chdir('makeTemplates')
