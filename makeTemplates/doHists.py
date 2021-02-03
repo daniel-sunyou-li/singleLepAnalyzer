@@ -300,6 +300,13 @@ plotList = {#discriminantName:(discriminantLJMETName, binning, xAxisLabel)
 	'BDT':('BDT',linspace(-1, 1, 201).tolist(),';BDT'),
 	}
 
+for y in [3,5,10,20,30,40,50,76]:
+	plotList['DNN_4j_1to{}'.format(y)] = ( 'DNN_4j_1to{}'.format(y), linspace(0,1,201).tolist(),';DNN_{4j,1-'+str(y)+'}' )
+	plotList['DNN_6j_1to{}'.format(y)] = ( 'DNN_6j_1to{}'.format(y), linspace(0,1,201).tolist(),';DNN_{6j,1-'+str(y)+'}' )
+for x in [4,6,11,21,31,41,51]:
+	plotList['DNN_4j_{}to76'.format(x)] = ( 'DNN_4j_{}to76'.format(x), linspace(0,1,201).tolist(),';DNN_{4j,'+str(x)+'-76}' )
+	plotList['DNN_6j_{}to76'.format(x)] = ( 'DNN_6j_{}to76'.format(x), linspace(0,1,201).tolist(),';DNN_{6j,'+str(x)+'-76}' )
+
 print "PLOTTING:",iPlot
 print "         LJMET Variable:",plotList[iPlot][0]
 print "         X-AXIS TITLE  :",plotList[iPlot][2]
