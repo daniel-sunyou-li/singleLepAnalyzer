@@ -35,24 +35,7 @@ trainings=[
 
 ]
 
-combinations = [
-{
-'variable':'BDT',
-'postfix':'66vars_4j_pt20'
-},
-{
-'variable':'BDT',
-'postfix':'66vars_6j_pt20'
-},
-{
-'variable':'BDT',
-'postfix':'73vars_4j_pt20'
-},
-{
-'variable':'BDT',
-'postfix':'73vars_6j_pt20'
-}
-]
+combinations = []
 
 for y in hpo_upper:
   combinations.append( { 'variable': 'DNN_4j_1to{}'.format( y ), 'postfix': postfix } )
@@ -82,7 +65,7 @@ if step==2:
   for train in trainings:
     shell_name = 'cfg/condor_step2_'+train['year']+'_'+train['postfix']+'.sh'
     shell=open(shell_name,'w')
-shell.write(
+    shell.write(
 '#!/bin/bash\n\
 source /cvmfs/cms.cern.ch/cmsset_default.sh\n\
 cd '+cmsswbase+'\n\
