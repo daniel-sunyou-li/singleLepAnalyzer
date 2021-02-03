@@ -1,71 +1,37 @@
 import os
 
-cmsswbase = '/user_data/ssagir/CMSSW_10_2_13/src'
+cmsswbase = '/home/dli50/CMS/CMSSW_10_2_13/src'
+postfix = 'hpo'
+
+hpo_upper = [3,5,10,20,30,40,50,76]
+hpo_lower = [4,6,11,21,31,41,51]
 
 trainings=[
 
 {
-'year':'R17',
-'variable':['BDT','HT'],
-'postfix':'66vars_4j_pt20',
-'path':'/mnt/hadoop/store/group/bruxljm/FWLJMET102X_1lep2017_Oct2019_4t_08262020_step3_wenyu/BDT_SepRank6j73vars2017year_66vars_mDepth2_4j_year2017/'
+'year': 'R17',
+'variable': [ 'DNN_4j_1to{}'.format(y) for y in hpo_upper ] + [ 'DNN_4j_{}to76'.format(x) for x in hpo_lower ],
+'postfix': postfix,
+'path':'/home/dli50/CMS/CMSSW_10_2_13/src/FWLJMET102X_1lep2017_Oct2019_4t_10072020_step3_4j/'
 },
 {
-'year':'R17',
-'variable':['BDT','HT'],
-'postfix':'66vars_6j_pt20',
-'path':'/mnt/hadoop/store/group/bruxljm/FWLJMET102X_1lep2017_Oct2019_4t_08262020_step3_wenyu/BDT_SepRank6j73vars2017year_66vars_mDepth2_6j_year2017/'
+'year': 'R17',
+'variable': [ 'DNN_6j_1to{}'.format(y) for y in hpo_upper ] + [ 'DNN_6j_{}to76'.format(x) for x in hpo_lower ],
+'postfix': postfix,
+'path':'/home/dli50/CMS/CMSSW_10_2_13/src/FWLJMET102X_1lep2017_Oct2019_4t_10072020_step3_6j/'
 },
 {
-'year':'R17',
-'variable':['BDT','HT'],
-'postfix':'73vars_4j_pt20',
-'path':'/mnt/hadoop/store/group/bruxljm/FWLJMET102X_1lep2017_Oct2019_4t_08262020_step3_wenyu/BDT_SepRank6j73vars2017year_73vars_mDepth2_4j_year2017/'
-},
+'year': 'R18',
+'variable': [ 'DNN_4j_1to{}'.format(y) for y in hpo_upper ] + [ 'DNN_4j_{}to76'.format(x) for x in hpo_lower ],
+'postfix': postfix,
+'path':'/home/dli50/CMS/CMSSW_10_2_13/src/FWLJMET102X_1lep2018_Oct2019_4t_10072020_step3_4j/'
+},	
 {
-'year':'R17',
-'variable':['BDT','HT'],
-'postfix':'73vars_6j_pt20',
-'path':'/mnt/hadoop/store/group/bruxljm/FWLJMET102X_1lep2017_Oct2019_4t_08262020_step3_wenyu/BDT_SepRank6j73vars2017year_73vars_mDepth2_6j_year2017/'
-},
-
-{
-'year':'R18',
-'variable':['BDT','HT'],
-'postfix':'66vars_4j_pt20',
-'path':'/mnt/hadoop/store/group/bruxljm/FWLJMET102X_1lep2018_Oct2019_4t_08262020_step3_wenyu/BDT_SepRank6j73vars2017year_66vars_mDepth2_4j_year2018/'
-},
-{
-'year':'R18',
-'variable':['BDT','HT'],
-'postfix':'66vars_6j_pt20',
-'path':'/mnt/hadoop/store/group/bruxljm/FWLJMET102X_1lep2018_Oct2019_4t_08262020_step3_wenyu/BDT_SepRank6j73vars2017year_66vars_mDepth2_6j_year2018/'
-},
-{
-'year':'R18',
-'variable':['BDT','HT'],
-'postfix':'73vars_4j_pt20',
-'path':'/mnt/hadoop/store/group/bruxljm/FWLJMET102X_1lep2018_Oct2019_4t_08262020_step3_wenyu/BDT_SepRank6j73vars2017year_73vars_mDepth2_4j_year2018/'
-},
-{
-'year':'R18',
-'variable':['BDT','HT'],
-'postfix':'73vars_6j_pt20',
-'path':'/mnt/hadoop/store/group/bruxljm/FWLJMET102X_1lep2018_Oct2019_4t_08262020_step3_wenyu/BDT_SepRank6j73vars2017year_73vars_mDepth2_6j_year2018/'
-},
-
-{
-'year':'R18',
-'variable':['HT'],
-'postfix':'HEM1516_201108',
-'path':'/mnt/hadoop/store/group/bruxljm/FWLJMET102X_1lep2018_Oct2019_4t_hem_110720_step1hadds/'
-},
-{
-'year':'R18',
-'variable':['HT'],
-'postfix':'HEM1516syst_201108',
-'path':'/mnt/hadoop/store/group/bruxljm/FWLJMET102X_1lep2018_Oct2019_4t_072820_step1hadds/'
-},
+'year': 'R18',
+'variable': [ 'DNN_6j_1to{}'.format(y) for y in hpo_upper ] + [ 'DNN_6j_{}to76'.format(x) for x in hpo_lower ],
+'postfix': postfix,
+'path':'/home/dli50/CMS/CMSSW_10_2_13/src/FWLJMET102X_1lep2018_Oct2019_4t_10072020_step3_6j/'
+},	
 
 ]
 
@@ -88,6 +54,13 @@ combinations = [
 }
 ]
 
+for y in hpo_upper:
+  combinations.append( { 'variable': 'DNN_4j_1to{}'.format( y ), 'postfix': postfix } )
+  combinations.append( { 'variable': 'DNN_6j_1to{}'.format( y ), 'postfix': postfix } )
+for x in hpo_lower:
+  combinations.append( { 'variable': 'DNN_4j_{}to76'.format( x ), 'postfix': postfix } )
+  combinations.append( { 'variable': 'DNN_6j_{}to76'.format( x ), 'postfix': postfix } )
+  
 #which step would you like to run?
 #1 doCondorTemplates
 #2 doTemplates
