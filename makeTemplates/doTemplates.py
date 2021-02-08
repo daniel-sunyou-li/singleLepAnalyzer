@@ -72,7 +72,7 @@ bkgProcs['T'] = ['Ts','Tt','Tbt','TtW','TbtW']
 if year=='R17': bkgProcs['T']+= ['Tbs']
 bkgProcs['TTV'] = ['TTWl','TTZlM10','TTHB','TTHnoB']
 if year!='R16': bkgProcs['TTV']+= ['TTZlM1to10']
-bkgProcs['TTXY']= ['TTHH','TTTJ','TTTW','TTWH','TTWW','TTWZ','TTZH','TTZZ']
+bkgProcs['TTXY']= ['TTHH','tttt','TTWH','TTWW','TTWZ','TTZH','TTZZ']
 bkgProcs['qcd'] = ['QCDht200','QCDht300','QCDht500','QCDht700','QCDht1000','QCDht1500','QCDht2000']
 bkgProcs['top'] = bkgProcs['T']+bkgProcs['TTV']+bkgProcs['TTXY']#+bkgProcs['TTJets']
 bkgProcs['ewk'] = bkgProcs['WJets']+bkgProcs['ZJets']+bkgProcs['VV']
@@ -89,10 +89,10 @@ for syst in ['hdup','hddn','ueup','uedn']:
 	bkgProcs['ttbj_'+syst] = bkgProcs['tt1b_'+syst] + bkgProcs['tt2b_'+syst]
 	bkgProcs['ttnobb_'+syst] = bkgProcs['ttjj_'+syst] + bkgProcs['ttcc_'+syst]+bkgProcs['tt1b_'+syst] + bkgProcs['tt2b_'+syst]
 
-whichSignal = 'tttt' #HTB, TT, BB, X53 or tttt
+whichSignal = 'tttx' #HTB, TT, BB, X53 or tttt
 massList = [690]#range(800,1600+1,100)
 sigList = [whichSignal+'M'+str(mass) for mass in massList]
-if whichSignal=='tttt': sigList = [whichSignal]
+if whichSignal=='tttx': sigList = [ 'TTTW', 'TTTJ' ]
 if whichSignal=='X53': 
 	sigList = [whichSignal+'LHM'+str(mass) for mass in [1100,1200,1400,1700]]
 	sigList+= [whichSignal+'RHM'+str(mass) for mass in range(900,1700+1,100)]

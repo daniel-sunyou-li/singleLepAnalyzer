@@ -1,6 +1,6 @@
 import os
 
-cmsswbase = '/home/dli50/CMS/CMSSW_10_2_13/src'
+cmsswbase = '/home/dli50/TTT_1lep/CMSSW_10_2_13/src'
 postfix = 'hpo'
 
 hpo_upper = [3,5,10,20,30,40,50,76]
@@ -35,6 +35,15 @@ trainings=[
 
 ]
 
+trainings=[
+{
+'year': 'R18',
+'variable': ['HT'],
+'postfix': 'base',
+'path':'/mnt/hadoop/store/group/bruxljm/FWLJMET102X_1lep2018_Oct2019_4t_10072020_step2'
+}
+]
+
 combinations = []
 
 for y in hpo_upper:
@@ -51,7 +60,7 @@ for x in hpo_lower:
 #4 dataCard + limit + significance
 #5 combination limit + significance
 #6 print results
-step=1
+step=4
 
 if step==1:
   os.chdir('makeTemplates')
@@ -141,7 +150,7 @@ cd '+cmsswbase+'\n\
 eval `scramv1 runtime -sh`\n\
 cd '+os.getcwd()+'\n\
 python dataCard.py '+train['year']+' '+v+' '+train['postfix']+'\n\
-cd limits_'+train['year']+'_'+train['postfix']+'_'+v+'\n\
+cd limits_'+train['year']+'_'+train['postfix']+'_smoothed_'+v+'\n\
 combine -M Significance cmb/workspace.root -t -1 --expectSignal=1 --cminDefaultMinimizerStrategy 0 &> sig.txt\n\
 combine -M AsymptoticLimits cmb/workspace.root --run=blind --cminDefaultMinimizerStrategy 0 &> asy.txt\n\
 cd ..\n')

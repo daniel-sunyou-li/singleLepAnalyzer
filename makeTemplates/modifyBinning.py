@@ -57,10 +57,11 @@ doPSWeights = True
 normalizeTheorySystSig = True #normalize renorm/fact, PDF and ISR/FSR systematics to nominal templates for signals
 normalizeTheorySystBkg = False #normalize renorm/fact, PDF and ISR/FSR systematics to nominal templates for backgrounds
 #tttt, X53, TT, BB, HTB, etc --> this is used to identify signal histograms for combine templates when normalizing the pdf and muRF shapes to nominal!!!!
-sigName = 'tttt' #MAKE SURE THIS WORKS FOR YOUR ANALYSIS PROPERLY!!!!!!!!!!!
+sigName = 'tttx' #MAKE SURE THIS WORKS FOR YOUR ANALYSIS PROPERLY!!!!!!!!!!!
 massList = [690]
 sigProcList = [sigName+'M'+str(mass) for mass in massList]
 if sigName=='tttt': sigProcList = [sigName]
+if sigName=='tttx': sigProcList = [ 'TTTW', 'TTTJ' ]
 if sigName=='X53': 
 	sigProcList = [sigName+'LHM'+str(mass) for mass in [1100,1200,1400,1700]]
 	sigProcList+= [sigName+'RHM'+str(mass) for mass in range(900,1700+1,100)]
@@ -591,7 +592,7 @@ for rfile in rfiles:
 					hsEDn.Write()
 				
 		for hist in rebinnedHists:
-			if 'DNN' in hists:
+			if 'DNN' in hist:
 				zero_bin = rebinnedHists[hist].FindBin(0)
 				max_bin = rebinnedHists[hist].GetNbinsX() + 1
 				for imtt in range( zero_bin, max_bin):

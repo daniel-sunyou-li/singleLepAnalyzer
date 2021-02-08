@@ -39,8 +39,8 @@ isRebinned='_rebinned_stat0p3' #post for ROOT file names
 if not isCategorized: isRebinned='_rebinned_stat1p1'
 saveKey = '' # tag for plot names
 
-sig='tttt' #  choose the 1st signal to plot
-sigleg='t#bar{t}t#bar{t}'
+sig='tttx' #  choose the 1st signal to plot
+sigleg='tttj+tttw'
 scaleSignalsToXsec = False # !!!!!Make sure you know signal x-sec used in input files to this script. If this is True, it will scale signal histograms by x-sec in weights.py!!!!!
 scaleSignals = False
 sigScaleFact = 10 #put -1 if auto-scaling wanted
@@ -51,9 +51,10 @@ ttProcList = ['ttnobb','ttbb'] # ['ttjj','ttcc','ttbb','ttbj']
 if iPlot=='HTYLD': ttProcList = ['ttbb','ttnobb']
 bkgProcList = ttProcList+['top','ewk','qcd']
 if '53' in sig: bkgHistColors = {'tt2b':rt.kRed+3,'tt1b':rt.kRed-3,'ttbj':rt.kRed+3,'ttbb':rt.kRed,'ttcc':rt.kRed-5,'ttjj':rt.kRed-7,'ttnobb':rt.kRed-7,'top':rt.kBlue,'ewk':rt.kMagenta-2,'qcd':rt.kOrange+5,'ttbar':rt.kRed} #4T
-elif 'tttt' in sig: bkgHistColors = {'tt2b':rt.kRed+3,'tt1b':rt.kRed-3,'ttbj':rt.kRed+3,'ttbb':rt.kRed,'ttcc':rt.kRed-5,'ttjj':rt.kRed-7,'ttnobb':rt.kRed-9,'top':rt.kBlue,'ewk':rt.kMagenta-2,'qcd':rt.kOrange+5,'ttbar':rt.kRed} #4T
+elif 'tttx' in sig: bkgHistColors = {'tt2b':rt.kRed+3,'tt1b':rt.kRed-3,'ttbj':rt.kRed+3,'ttbb':rt.kRed,'ttcc':rt.kRed-5,'ttjj':rt.kRed-7,'ttnobb':rt.kRed-9,'top':rt.kBlue,'ewk':rt.kMagenta-2,'qcd':rt.kOrange+5,'ttbar':rt.kRed} #4T
 elif 'HTB' in sig: bkgHistColors = {'ttbar':rt.kGreen-3,'wjets':rt.kPink-4,'top':rt.kAzure+8,'ewk':rt.kMagenta-2,'qcd':rt.kOrange+5} #HTB
 else: bkgHistColors = {'top':rt.kAzure+8,'ewk':rt.kMagenta-2,'qcd':rt.kOrange+5} #TT
+sigProcList = [ 'TTTW', 'TTTJ' ]
 
 systematicList = ['pileup','JEC','JER','PSwgt','muRF','pdf']#,'njet','hdamp','ue','ht','trigeff','toppt','tau32','jmst','jmrt','tau21','jmsW','jmrW','tau21pt']
 #systematicList+= ['CSVshapelf','CSVshapehf']
@@ -91,6 +92,8 @@ else: #theta
 if not os.path.exists(templateDir+sigfile):
 	print "ERROR: File does not exits: "+templateDir+sigfile
 	os._exit(1)
+ 
+print "Using iPlot: {} with sigName: {}".format( iPlot, sigName )
 print "READING: "+templateDir+sigfile
 RFile = rt.TFile(templateDir+sigfile)
 
@@ -222,6 +225,7 @@ table.append(['Categories','prob_KS','prob_KS_X','prob_chi2','chi2','ndof'])
 table.append(['break'])
 bkghists = {}
 bkghistsmerged = {}
+sighists = {}
 systHists = {}
 totBkgTemp1 = {}
 totBkgTemp2 = {}
@@ -244,6 +248,7 @@ for catEStr in catsElist:
 			except:
 				print "There is no "+proc+"!!! Skipping it....."
 				pass
+		print histPrefix+'__'+dataName
 		hData = RFile.Get(histPrefix+'__'+dataName).Clone()
 		hData_test = RFile.Get(histPrefix+'__'+dataName).Clone()
 		bkgHT_test = bkghists[bkgProcList[0]+catStr].Clone()
@@ -252,14 +257,30 @@ for catEStr in catsElist:
 			try: bkgHT_test.Add(bkghists[proc+catStr])
 			except: pass
 		print hData_test.Integral(),bkgHT_test.Integral()
-		hsig = RFile.Get(histPrefix+'__'+sigName).Clone(histPrefix+'__'+sigName)
-		if scaleSignalsToXsec: hsig.Scale(xsec[sig])
+
+		sighists['sig'+catStr] = RFile.Get(histPrefix+'__'+sigProcList[0]).Clone(histPrefix+'__sig')
+		if scaleSignalsToXsec:
+			sighists['sig'+catStr].Scale(xsec[sigProcList[0]])
+
+		for proc in sigProcList:
+			if proc != sigProcList[0]: 
+				if scaleSignalsToXsec:
+					sighists['sig'+catStr].Add( RFile.Get(histPrefix+'__'+proc).Scale(xsec[proc]) )
+				else:
+					sighists['sig'+catStr].Add( RFile.Get(histPrefix+'__'+proc) )
+
+		#hsig = RFile.Get(histPrefix+'__'+sigName).Clone(histPrefix+'__'+sigName)
+		#if scaleSignalsToXsec: 
+			#for hsig in sighists: sighists[hsig].Scale(xsec[sig])
+			#sighists['sig'+catStr].Scale(xsec[sig])
 		if doNormByBinWidth:
 			for proc in bkgProcList:
 				try: normByBinWidth(bkghists[proc+catStr])
 				except: pass
-			normByBinWidth(hsig)
+			normByBinWidth(sighists['sig'+catStr])
 			normByBinWidth(hData)
+
+		hsig = sighists['sig'+catStr]
 
 		if doAllSys:
 			print systematicList_
@@ -696,9 +717,16 @@ for catEStr in catsElist:
 	for proc in bkgProcList[1:]:
 		try: bkgHTmerged_test.Add(bkghistsmerged[proc+catLStr])
 		except: pass
-	hsigmerged = RFile.Get(histPrefixE+'__'+sigName).Clone(histPrefixE+'__'+sigName+'merged')
-	hsigmerged.Add(RFile.Get(histPrefixM+'__'+sigName).Clone())
-	if scaleSignalsToXsec: hsigmerged.Scale(xsec[sig])
+
+	hsigmerged = RFile.Get( histPrefixE+'__'+sigProcList[0] ).Clone( histPrefixE+'__'+sigProcList[0]+'merged' )
+	hsigmerged.Add( RFile.Get( histPrefixM+'__'+sigProcList[0] ).Clone() )
+	if scaleSignalsToXsec: 
+		hsigmerged.Scale( xsec[sigProcList[0]] )
+	for proc in sigProcList:
+		if proc != sigProcList[0]:
+			if scaleSignalsToXsec:
+				hsigmerged.Add( RFile.Get( histPrefixE+'__'+proc ).Clone().Scale( xsec[proc] ) )
+				hsigmerged.Add( RFile.Get( histPrefixM+'__'+proc ).Clone().Scale( xsec[proc] ) )
 	if doNormByBinWidth:
 		for proc in bkgProcList:
 			try: normByBinWidth(bkghistsmerged[proc+catLStr])

@@ -100,7 +100,7 @@ bkgList = [
 		  'TTJets2L2nuTT1b','TTJets2L2nuTT2b','TTJets2L2nuTTbb','TTJets2L2nuTTcc','TTJets2L2nuTTjj',
 		  
 		  'Ts','Tt','Tbt','TtW','TbtW', 
-		  'TTHH','TTTJ','TTTW','TTWH','TTWW','TTWZ','TTZH','TTZZ',
+		  'TTHH','tttt','TTWH','TTWW','TTWZ','TTZH','TTZZ',
 		  'TTWl','TTZlM10','TTHB','TTHnoB',#'TTWq',
           'WW','WZ','ZZ',
 		  'QCDht200','QCDht300','QCDht500','QCDht700','QCDht1000','QCDht1500','QCDht2000',
@@ -116,10 +116,10 @@ ttFlvs = []#'_tt2b','_ttbb','_ttb','_ttcc','_ttlf']
 
 dataList = ['DataE','DataM']#,'DataJ']
 
-whichSignal = 'tttt' #HTB, TT, BB, X53 or tttt
+whichSignal = 'tttx' #HTB, TT, BB, X53 or tttt
 massList = [690]#range(800,1600+1,100)
 sigList = [whichSignal+'M'+str(mass) for mass in massList]
-if whichSignal=='tttt': sigList = [whichSignal]
+if whichSignal=='tttx': sigList = [ 'TTTW', 'TTTJ' ]
 if whichSignal=='X53': 
 	sigList = [whichSignal+'LHM'+str(mass) for mass in [1100,1200,1400,1700]]
 	sigList+= [whichSignal+'RHM'+str(mass) for mass in range(900,1700+1,100)]

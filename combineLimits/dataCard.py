@@ -26,10 +26,12 @@ def add_shapes(cb):
 	print '>> Extracting histograms from input root files...'
 	for chn in chns:
 		bkg_pattern = iPlot+'_'+lumiStr+'_%s$BIN__$PROCESS' % chn
+		print( "bkg_pattern = {}".format( bkg_pattern ) )
 		cb.cp().channel([chn]).era([era]).backgrounds().ExtractShapes(
 			rfile, bkg_pattern, bkg_pattern + '__$SYSTEMATIC')
 		
 		sig_pattern = iPlot+'_'+lumiStr+'_%s$BIN__$PROCESS$MASS' % chn
+		print( "sig pattern = {}".format( sig_pattern ) )
 		if 'isCR' not in chn:
 			cb.cp().channel([chn]).era([era]).signals().ExtractShapes(
 				rfile, sig_pattern, sig_pattern + '__$SYSTEMATIC')
@@ -113,8 +115,8 @@ def add_standard_systematics(cb):
 		else: 
 			cb.cp().process([proc]).channel(chns).AddSyst(cb, smoothAlgo+'muRF_'+proc, 'shape', ch.SystMap()(1.0)) # Correlated, PDF and QCD Scale (not recalculated in 2018); Ex: B2G-19-001/AN2018_322_v7 
 			cb.cp().process([proc]).channel(chns).AddSyst(cb, smoothAlgo+'PSwgt_'+proc, 'shape', ch.SystMap()(1.0)) # Uncorrelated; TOP-18-003/AN2018_062_v17 (derived from different datasets and with respect to different MC samples)
-	cb.cp().process(signal).channel(chns).AddSyst(cb, smoothAlgo+'muRF_tttt', 'shape', ch.SystMap()(1.0)) # Correlated, PDF and QCD Scale (not recalculated in 2018); Ex: B2G-19-001/AN2018_322_v7 
-	cb.cp().process(signal).channel(chns).AddSyst(cb, smoothAlgo+'PSwgt_tttt', 'shape', ch.SystMap()(1.0)) # Uncorrelated; TOP-18-003/AN2018_062_v17 (derived from different datasets and with respect to different MC samples)
+	cb.cp().process(signal).channel(chns).AddSyst(cb, smoothAlgo+'muRF', 'shape', ch.SystMap()(1.0)) # Correlated, PDF and QCD Scale (not recalculated in 2018); Ex: B2G-19-001/AN2018_322_v7 
+	cb.cp().process(signal).channel(chns).AddSyst(cb, smoothAlgo+'PSwgt', 'shape', ch.SystMap()(1.0)) # Uncorrelated; TOP-18-003/AN2018_062_v17 (derived from different datasets and with respect to different MC samples)
 	cb.cp().process(signal + allbkgs).channel(chns).AddSyst(cb, smoothAlgo+'pdf', 'shape', ch.SystMap()(1.0)) # Correlated, PDF and QCD Scale (not recalculated in 2018); Ex: B2G-19-001/AN2018_322_v7
 # 	cb.cp().process(signal).channel(chns).AddSyst(cb, 'xsec_tttt', 'lnN', ch.SystMap()(1.21)) # https://arxiv.org/pdf/1711.02116.pdf (Table 5)
 # 	cb.cp().process(ttbkgs).channel(chns).AddSyst(cb, 'ue', 'shape', ch.SystMap()(1.0))
@@ -194,7 +196,7 @@ def create_workspace(cb):
 		
 
 def go(cb):
-	add_processes_and_observations(cb)
+	add_processes_and_observations(cb,'tttx')
 	add_standard_systematics(cb)
 	add_HF_systematics(cb)
 	#add_Njet4to9p_systematics(cb)
@@ -237,7 +239,7 @@ if __name__ == '__main__':
 	chns_njet = {}
 	for i in range(4,11):
 		chns_njet[i]=[chn for chn in chns if 'nJ'+str(i) in chn]
-	bkg_procs = {chn:[hist.split('__')[-1] for hist in allHistNames if '_'+chn+'_' in hist and not (hist.endswith('Up') or hist.endswith('Down') or hist.endswith(dataName) or hist.endswith('tttt'))] for chn in chns}
+	bkg_procs = {chn:[hist.split('__')[-1] for hist in allHistNames if '_'+chn+'_' in hist and not (hist.endswith('Up') or hist.endswith('Down') or hist.endswith(dataName) or hist.endswith('TTTW') or hist.endswith('TTTJ'))] for chn in chns}
 	for cat in sorted(bkg_procs.keys()):
 		print cat,bkg_procs[cat]
 		if 'qcd' in bkg_procs[cat]:
@@ -246,7 +248,7 @@ if __name__ == '__main__':
 # 	if era=='R18':
 # 		bkg_procs['isSR_isE_nHOT1p_nT0p_nW0p_nB4p_nJ9']=['ttbb', 'ttcc', 'ttjj', 'top']
 	
-	sig_procs = ['tttt']
+	sig_procs = ['TTTW','TTTJ']
 	
 	cats = {}
 	for chn in chns: cats[chn] = [(0, '')]
